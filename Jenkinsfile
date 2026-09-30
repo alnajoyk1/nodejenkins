@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_VERSION = '20'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -16,11 +12,11 @@ pipeline {
 
         stage('Check Node.js') {
             steps {
-                sh '''
-                    echo "Node version:"
+                bat '''
+                    echo Node.js version:
                     node --version
 
-                    echo "npm version:"
+                    echo npm version:
                     npm --version
                 '''
             }
@@ -29,8 +25,8 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    sh '''
-                        echo "Installing backend dependencies..."
+                    bat '''
+                        echo Installing backend dependencies...
                         npm ci
                     '''
                 }
@@ -40,8 +36,8 @@ pipeline {
         stage('Backend Check') {
             steps {
                 dir('backend') {
-                    sh '''
-                        echo "Checking backend..."
+                    bat '''
+                        echo Checking backend JavaScript...
                         node --check index.js
                     '''
                 }
@@ -51,8 +47,8 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    sh '''
-                        echo "Installing frontend dependencies..."
+                    bat '''
+                        echo Installing frontend dependencies...
                         npm ci
                     '''
                 }
@@ -62,8 +58,8 @@ pipeline {
         stage('Frontend Build') {
             steps {
                 dir('frontend') {
-                    sh '''
-                        echo "Building React frontend..."
+                    bat '''
+                        echo Building React frontend...
                         npm run build
                     '''
                 }
@@ -72,7 +68,7 @@ pipeline {
 
         stage('Archive Frontend Build') {
             steps {
-                archiveArtifacts artifacts: 'frontend/dist/**',
+                archiveArtifacts artifacts: 'frontend\\dist\\**',
                                  fingerprint: true
             }
         }
